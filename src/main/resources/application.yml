@@ -1,0 +1,38 @@
+server:
+  port: 8765
+
+spring:
+  main:
+    web-application-type: reactive
+  application:
+    name: gateway-service
+
+  config:
+    import: optional:configserver:http://localhost:8888
+
+
+#  cloud:
+#    config:
+#      uri: http://localhost:8888
+#      # The name and profile tell the config server which files to fetch, e.g. "gateway-service-dev.yml"
+#      name: gateway-service
+#      profile: dev
+
+#    gateway:
+#      # Example route
+#      routes:
+#        - id: events-service
+#          uri: http://localhost:8081
+#          predicates:
+#            - Path=/events/**
+#          filters:
+#            - StripPrefix=1
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, env, refresh
+  endpoint:
+    health:
+      show-details: ALWAYS
