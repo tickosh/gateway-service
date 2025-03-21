@@ -1,32 +1,37 @@
 server:
-  port: 8765
+  port: 8081
 
 spring:
   main:
     web-application-type: reactive
   application:
     name: gateway-service
-
   config:
     import: optional:configserver:http://localhost:8888
 
+  security:
+    oauth2:
+      client:
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/tickosh-realm
+        registration:
+          keycloak:
+            provider: keycloak
+            client-id: tickosh-gateway
+            client-secret: B0FtP48SDxzKh8ITvsBKQHbkSj9AwtLi
+            authorization-grant-type: authorization_code
+            scope: openid
 
-#  cloud:
-#    config:
-#      uri: http://localhost:8888
-#      # The name and profile tell the config server which files to fetch, e.g. "gateway-service-dev.yml"
-#      name: gateway-service
-#      profile: dev
-
-#    gateway:
-#      # Example route
-#      routes:
-#        - id: events-service
-#          uri: http://localhost:8081
-#          predicates:
-#            - Path=/events/**
-#          filters:
-#            - StripPrefix=1
+  cloud:
+    gateway:
+      routes:
+        - id: ticket-service
+          uri: http://localhost:8082
+          predicates:
+            - Path=/api/tickets/**
+          filters:
+            - TokenRelay=
 
 management:
   endpoints:
